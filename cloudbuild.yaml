@@ -1,0 +1,16 @@
+# File: cloudbuild.yaml
+steps:
+    # build the container image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', 'Module_3/webapp']
+    # push the container image
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    args: ['push', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp']
+    # deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    args: ['run', 'deploy', 'webapp', '--image', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated']
+    # set custom domain
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+    args: ['beta', 'run', 'domain-mappings', 'create', '--service', 'webapp', '--domain', 'mod3.bone-idol.net']
+
+
