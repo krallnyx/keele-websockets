@@ -2,7 +2,7 @@
 steps:
     # build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', 'Module_3/webapp']
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', '.']
     # push the container image
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     args: ['push', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp']
