@@ -43,6 +43,7 @@ steps:
     args:
       - 'dns'
       - 'record-sets'
+      - 'create'
       - '--zone'
       - 'bone-idol'
       - 'transaction'
@@ -50,7 +51,7 @@ steps:
       - '--type'
       - 'CNAME'
       - '--name'
-      - 'mod3.bone-idol.net'
+      - 'mod3.bone-idol.net.'
       - '--ttl'
       - '3600'
       - '--rrdatas'
