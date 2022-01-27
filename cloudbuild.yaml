@@ -1,12 +1,21 @@
+---
 # File: cloudbuild.yaml
+substitutions:
+  WEBAPP_VERSION: '0.0.2'
 steps:
-    # build the container image
+  # build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', '.']
-    # push the container image
+    args:
+      - 'build'
+      - '-t'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${WEBAPP_VERSION}'
+      - '.'
+  # push the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp']
-    # deploy to Cloud Run
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${WEBAPP_VERSION}'
+  # deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     args:
       - 'gcloud'
@@ -14,12 +23,22 @@ steps:
       - 'deploy'
       - 'webapp'
       - '--image'
-      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${WEBAPP_VERSION}'
       - '--region'
       - 'europe-west1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '0.5'
+      - '--concurrency'
+      - '2'
+      - '--max-instances'
+      - '2'
+      - '--min-instances'
+      - '0'
   # set custom domain
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     args:
@@ -32,3 +51,5 @@ steps:
       - 'webapp'
       - '--domain'
       - 'mod3.bone-idol.net'
+      - '--region'
+      - 'europe-west1'
