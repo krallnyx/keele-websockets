@@ -18,9 +18,8 @@ steps:
       - 'push'
       - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${_WEBAPP_VERSION}'
   # deploy to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  - name: 'gcr.io/cloud-builders/gcloud'
     args:
-      - 'gcloud'
       - 'run'
       - 'deploy'
       - 'webapp'
@@ -39,6 +38,23 @@ steps:
       - '2'
       - '--min-instances'
       - '0'
+  # Add DNS zone:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'dns'
+      - 'record-sets'
+      - '--zone'
+      - 'bone-idol'
+      - 'transaction'
+      - 'add'
+      - '--type'
+      - 'CNAME'
+      - '--name'
+      - 'mod3.bone-idol.net'
+      - '--ttl'
+      - '3600'
+      - '--rrdatas'
+      - 'ghs.googlehosted.com.'
   # set custom domain
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     args:
