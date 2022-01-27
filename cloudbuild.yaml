@@ -4,7 +4,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp', '.']
     # push the container image
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west1-docker.pkg.dev/bone-idol/university/webapp']
     # deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
