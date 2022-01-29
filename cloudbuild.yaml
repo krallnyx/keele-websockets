@@ -3,7 +3,7 @@
 options:
   dynamic_substitutions: true
 substitutions:
-  _WEBAPP_VERSION: '0.0.2'
+  _WEBAPP_VERSION: '0.0.3'
 steps:
   # build the container image
   - name: 'gcr.io/cloud-builders/docker'
@@ -38,32 +38,3 @@ steps:
       - '2'
       - '--min-instances'
       - '0'
-  # Add DNS zone:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'dns'
-      - 'record-sets'
-      - 'create'
-      - 'mod3.bone-idol.net.'
-      - '--zone'
-      - 'bone-idol'
-      - '--type'
-      - 'CNAME'
-      - '--ttl'
-      - '3600'
-      - '--rrdatas'
-      - 'ghs.googlehosted.com.'
-  # set custom domain
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
-    args:
-      - 'gcloud'
-      - 'beta'
-      - 'run'
-      - 'domain-mappings'
-      - 'create'
-      - '--service'
-      - 'webapp'
-      - '--domain'
-      - 'mod3.bone-idol.net'
-      - '--region'
-      - 'europe-west1'
