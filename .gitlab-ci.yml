@@ -2,7 +2,7 @@
 #
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == "cloud_build"
+    - if: $CI_DEFAULT_BRANCH
 
 stages:
   - deploy_mod3_webapp
