@@ -1,0 +1,17 @@
+# File: .gitlab-ci.yml
+#
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "cloud_build"
+
+stages:
+  - deploy_mod3_webapp
+
+deploy:
+  stage: deploy_mod3_webapp
+  image: google/cloud-sdk
+  script:
+    - echo $MOD3_SERVICEACCOUNT_KEY > gcloud-service-key.json
+    - gcloud auth activate-service-account --key-file gcloud-service-key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud builds submit Module_3/webapp --config=Module_3/webapp/cloudbuild.yaml --gcs-log-dir=gs://mod3_webapp_build_logs
