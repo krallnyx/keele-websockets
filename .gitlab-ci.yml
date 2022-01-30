@@ -14,4 +14,4 @@ deploy:
     - echo $MOD3_SERVICEACCOUNT_KEY > gcloud-service-key.json
     - gcloud auth activate-service-account --key-file gcloud-service-key.json
     - gcloud config set project $GCP_PROJECT_ID
-    - gcloud builds submit Module_3/webapp --config=Module_3/webapp/cloudbuild.yaml --gcs-log-dir=gs://mod3_webapp_build_logs
+    - gcloud builds submit --config=cloudbuild.yaml --gcs-log-dir=gs://mod3_webapp_build_logs
