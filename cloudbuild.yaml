@@ -1,0 +1,40 @@
+---
+# File: cloudbuild.yaml
+options:
+  dynamic_substitutions: true
+substitutions:
+  _WEBAPP_VERSION: '0.0.3'
+steps:
+  # build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${_WEBAPP_VERSION}'
+      - '.'
+  # push the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${_WEBAPP_VERSION}'
+  # deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'webapp'
+      - '--image'
+      - 'europe-west1-docker.pkg.dev/bone-idol/university/webapp:${_WEBAPP_VERSION}'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '512Mi'
+      - '--cpu'
+      - '1'
+      - '--max-instances'
+      - '2'
+      - '--min-instances'
+      - '0'
