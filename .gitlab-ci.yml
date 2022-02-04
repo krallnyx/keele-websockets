@@ -2,7 +2,10 @@
 #
 workflow:
   rules:
-    - if: $CI_DEFAULT_BRANCH
+    # run on main always:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    # never run anywhere else:
+    - when: never
 
 stages:
   - deploy_mod3_webapp
