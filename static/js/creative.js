@@ -66,7 +66,7 @@ d3.csv("/static/data/Kaggle_TwitterUSAirlineSentiment.csv", function(data) {
 
   // Add Y axis
   var y = d3.scaleLinear()
-    .domain([0, 50])
+    .domain([0, 40])
     .range([ height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
@@ -86,7 +86,6 @@ d3.csv("/static/data/Kaggle_TwitterUSAirlineSentiment.csv", function(data) {
 
   // Show the bars
   svg.append("g")
-    .selectAll("g")
     .selectAll("g")
     // Enter in data = loop group per group
     .data(reducedData)
