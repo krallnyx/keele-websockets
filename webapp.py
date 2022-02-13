@@ -15,6 +15,11 @@ def display_data_d3():
     return render_template("advanced.html")
 
 
+@app.route('/creative')
+def display_creative_data_d3():
+    return render_template("creative.html")
+
+
 @app.route('/basic')
 def display_data():
     with open('static/data/Kaggle_TwitterUSAirlineSentiment.csv', encoding='utf-8-sig') as csv_file:
