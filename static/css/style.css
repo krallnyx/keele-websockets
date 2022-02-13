@@ -47,3 +47,10 @@ th.des:after {
 th.aes:after {
     content: "\21E7";
 }
+
+circle {
+    stroke: white;
+    fill: #05668D;
+    opacity: 0.3;
+    stroke-width: 2px;
+}
