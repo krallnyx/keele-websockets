@@ -80,7 +80,7 @@ d3.csv("/static/data/Kaggle_TwitterUSAirlineSentiment.csv", function(data) {
   // color palette = one color per subgroup
   var color = d3.scaleOrdinal()
     .domain(sentiments)
-    .range(['#e41a1c','#377eb8','#4daf4a'])
+    .range(['#4daf4a','#f5b342','#e41a1c'])
 
 
 
