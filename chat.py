@@ -48,11 +48,12 @@ message_schema = {
     "required" : [ "handle", "text" ],
     "additionalProperties" : False
 }
-
 """ END OF DECLARING SECURITY FEATURES """
+
 
 sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
+
 
 class ChatBackend(object):
     """Interface for registering and updating WebSocket clients."""
@@ -132,5 +133,3 @@ def outbox(ws):
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
         gevent.sleep(0.1)
-
-
