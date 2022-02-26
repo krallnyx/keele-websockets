@@ -16,3 +16,5 @@ Werkzeug<2.0,>=0.15
 wrapt==1.13.3
 zope.event==4.5.0
 zope.interface==5.4.0
+Flask-Limiter==1.4
+jsonschema==4.4.0

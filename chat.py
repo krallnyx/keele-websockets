@@ -4,8 +4,12 @@ import os
 import logging
 import redis
 import gevent
+import jsonschema
 from flask import Flask, render_template
 from flask_sockets import Sockets
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 REDIS_URL = os.environ['REDIS_URL']
 REDIS_CHAN = 'chat'
@@ -15,6 +19,37 @@ gunicorn_logger = logging.getLogger('gunicorn.error')
 app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)
 app.debug = 'DEBUG' in os.environ
+
+
+""" ADDIND SECURITY FEATURES"""
+# set up the limiter, set some global defaults
+# that apply to all routes
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
+
+# define our message schema:
+message_schema = {
+    "type" : "object",
+    "properties" : {
+        "handle" : {
+            "type" : "string",
+            "minLength" : 3,
+            "maxLength" : 25,
+         },
+        "text" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 140,
+        },
+    },
+    "required" : [ "handle", "text" ],
+    "additionalProperties" : False
+}
+
+""" END OF DECLARING SECURITY FEATURES """
 
 sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
@@ -75,11 +110,21 @@ def inbox(ws):
         message = ws.receive()
 
         if message:
-            app.logger.info(u'Inserting message: {}'.format(message))
-            redis.publish(REDIS_CHAN, message)
+            """ SECURITY FEATURE, MESSAGE VALIDATION """
+            try:
+                jsonschema.validate(json.loads(message), message_schema)
+            except jsonschema.exceptions.ValidationError as err:
+                # Validation error, closing the client
+                ws.close()
+            else:
+                # Validation successful, proceeding
+                app.logger.info(u'Inserting message: {}'.format(message))
+                redis.publish(REDIS_CHAN, message)
 
 
 @sockets.route('/receive')
+# SECURITY FEATURE, we limit the number of requests to 1 per second
+@limiter.limit("1/second", override_defaults=False)
 def outbox(ws):
     """Sends outgoing chat messages, via `ChatBackend`."""
     chats.register(ws)
